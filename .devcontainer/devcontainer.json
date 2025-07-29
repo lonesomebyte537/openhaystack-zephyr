@@ -1,6 +1,6 @@
 {
     "name": "zephyr-openhaystack",
-    "image": "docker.io/zephyrprojectrtos/zephyr-build:v0.21.0",
+    "image": "docker.io/zephyrprojectrtos/zephyr-build:v0.28.2",
     "containerEnv": {
         "ZEPHYR_BASE": "/workspaces/openhaystack-zephyr/zephyr-workspace/zephyr/",
         "SHELL": "/bin/bash"

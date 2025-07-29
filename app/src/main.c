@@ -7,12 +7,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include <bluetooth/addr.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/hci.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/hci.h>
 #include <stddef.h>
-#include <sys/printk.h>
-#include <sys/util.h>
+#include <zephyr/sys/printk.h>
+#include <zephyr/sys/util.h>
 #include <zephyr/types.h>
 
 #include "openhaystack.h"
@@ -25,9 +24,9 @@
 static char public_key[28] = "OFFLINEFINDINGPUBLICKEYHERE!";
 
 static bt_addr_le_t device_address = { BT_ADDR_LE_RANDOM,
-				       { 0xFF, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF } };
+				       { { 0xFF, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF } } };
 
-void main(void)
+int main(void)
 {
 	int err, bt_id;
 
@@ -41,7 +40,7 @@ void main(void)
 	bt_id = bt_id_create(&device_address, NULL);
 	if (bt_id < 0) {
 		printk("Can't create new identity (err %d)\n", bt_id);
-		return;
+		return -1;
 	} else {
 		printk("Created new identity %d\n", bt_id);
 	}
@@ -50,6 +49,7 @@ void main(void)
 	err = bt_enable(NULL);
 	if (err) {
 		printk("Bluetooth init failed (err %d)\n", err);
+		return -1;
 	}
 
 	printk("Bluetooth initialized\n");
@@ -59,9 +59,10 @@ void main(void)
 	err = bt_le_adv_start(&of_adv_param, of_advertising_data, ARRAY_SIZE(of_advertising_data), NULL, 0);
 	if (err) {
 		printk("Advertising failed to start (err %d)\n", err);
-		return;
+		return -1;
 	}
 
+	return 0;
 }
 
 #ifdef CONFIG_USB_UART_CONSOLE
